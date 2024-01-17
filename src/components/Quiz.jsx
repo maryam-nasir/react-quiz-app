@@ -1,27 +1,29 @@
 import { useState } from 'react';
 
 import QUESTIONS from '../questions';
+import Question from './Question';
+import Summary from './Summary';
 
 const Quiz = () => {
     const [userAnswers, setUserAnswers] = useState([]);
 
     const activeQuestionIndex = userAnswers.length;
+    const isQuizComplete = activeQuestionIndex === QUESTIONS.length;
+
+    if (isQuizComplete) {
+        return <Summary userAnswers={userAnswers} />
+    }
 
     const handleAnswerSelect = (selectedAnswer) => {
         setUserAnswers(prevAnswers => ([...prevAnswers, selectedAnswer]));
     };
 
     return <div id="quiz">
-        <div id="question">
-            <h2>{QUESTIONS[activeQuestionIndex].text}</h2>
-            <ul id="answers">
-                {QUESTIONS[activeQuestionIndex].answers.map((answer) => (
-                    <li key={answer} className='answer'>
-                        <button onClick={() => handleAnswerSelect(answer)}>{answer}</button>
-                    </li>
-                ))}
-            </ul>
-        </div>
+        <Question
+            key={activeQuestionIndex}
+            index={activeQuestionIndex}
+            onSelect={handleAnswerSelect}
+        />
     </div>;
 };
 
